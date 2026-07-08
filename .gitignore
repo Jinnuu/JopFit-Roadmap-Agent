@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+!.env.example
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test / cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+
+# Local outputs
+outputs/*
+!outputs/.gitkeep
+
+# Project context / generated backup files
+project_context.txt
+project_context*.txt
+붙여넣은 텍스트*.txt
+merge_file_output.txt
+
+# Accidental backup folders
+%USERPROFILE%/
+agy-record-backup/
+
+project_dump.md
+
+frontend/dist/
+frontend/node_modules/
+
+# USERPROFILE
+project_context.txt
+project_context*.txt
+
+# env
+.env
+!.env.example
