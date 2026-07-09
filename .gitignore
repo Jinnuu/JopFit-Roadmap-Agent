@@ -44,6 +44,11 @@ dist/
 outputs/*
 !outputs/.gitkeep
 
+# Database
+*.db
+jobfit_dev.db
+
+
 # Project context / generated backup files
 project_context.txt
 project_context*.txt

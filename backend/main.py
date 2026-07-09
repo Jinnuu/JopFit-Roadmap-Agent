@@ -10,10 +10,22 @@ from src.schemas import UserInput, JopFitResult
 from src.graph import run_mock_workflow, run_llm_workflow
 from backend.api_models import AnalyzeRequest
 
+# Import V2 API routers
+from backend.api.auth import router as auth_router
+from backend.api.experiences import router as experiences_router
+from backend.api.projects import router as projects_router
+from backend.api.resume_drafts import router as resume_drafts_router
+from backend.api.preferences import router as preferences_router
+from backend.api.analyses import router as analyses_router
+from backend.api.roadmaps import router as roadmaps_router
+from backend.api.notifications import router as notifications_router
+from backend.api.recommendations import router as recommendations_router
+from backend.api.rag_sources import router as rag_sources_router
+
 app = FastAPI(
-    title="JopFit Roadmap Agent API",
-    description="FastAPI Backend for JopFit Roadmap Agent MVP",
-    version="1.0.0"
+    title="JobFit Roadmap Agent API",
+    description="FastAPI Backend for JobFit Roadmap Agent MVP",
+    version="2.0.0"
 )
 
 # CORS Policy configuration
@@ -25,11 +37,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Register new authentication-based routers
+app.include_router(auth_router)
+app.include_router(experiences_router)
+app.include_router(projects_router)
+app.include_router(resume_drafts_router)
+app.include_router(preferences_router)
+app.include_router(analyses_router)
+app.include_router(roadmaps_router)
+app.include_router(notifications_router)
+app.include_router(recommendations_router)
+app.include_router(rag_sources_router)
+
 @app.get("/api/health")
 def health_check():
     return {
         "status": "ok",
-        "service": "jopfit-roadmap-agent"
+        "service": "jobfit-roadmap-agent"
     }
 
 @app.post("/api/analyze", response_model=JopFitResult)
