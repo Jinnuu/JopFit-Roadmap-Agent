@@ -1,6 +1,6 @@
 # API_SPEC.md
 
-# JopFit Roadmap Agent API Specification
+# JobFit Roadmap Agent API Specification
 
 이 문서는 React 프론트엔드와 FastAPI 백엔드 간의 데이터 통신을 위한 API 명세를 정의한다.
 
@@ -24,7 +24,7 @@
   ```json
   {
     "status": "ok",
-    "service": "jopfit-roadmap-agent"
+    "service": "jobfit-roadmap-agent"
   }
   ```
 

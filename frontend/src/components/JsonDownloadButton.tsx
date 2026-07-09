@@ -13,7 +13,7 @@ export const JsonDownloadButton: React.FC<JsonDownloadButtonProps> = ({ result }
       const downloadUrl = URL.createObjectURL(dataBlob);
       const tempLink = document.createElement('a');
       tempLink.href = downloadUrl;
-      tempLink.download = 'jopfit_roadmap_result.json';
+      tempLink.download = 'jobfit_roadmap_result.json';
       document.body.appendChild(tempLink);
       tempLink.click();
       document.body.removeChild(tempLink);
@@ -25,10 +25,8 @@ export const JsonDownloadButton: React.FC<JsonDownloadButtonProps> = ({ result }
   };
 
   return (
-    <div className="download-section">
-      <button onClick={handleDownload} className="download-btn">
-        결과 파일로 저장
-      </button>
-    </div>
+    <button onClick={handleDownload} className="download-btn no-print">
+      JSON으로 저장
+    </button>
   );
 };

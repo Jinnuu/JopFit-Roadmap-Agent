@@ -8,15 +8,14 @@ COMMON_RULES = """
 6. 모든 출력은 지정된 JSON 포맷 및 Pydantic 스키마 형식을 엄격하게 준수하여야 합니다.
 """
 
-JOB_ANALYSIS_PROMPT = f"""
-당신은 채용공고를 분석하는 전문 HR 에이전트입니다.
+JOB_ANALYSIS_PROMPT = """당신은 채용공고를 분석하는 전문 HR 에이전트입니다.
 지원 직무와 채용공고 본문을 분석하여 핵심 요구사항을 도출하십시오.
 
-{COMMON_RULES}
+""" + COMMON_RULES + """
 
 [입력 데이터]
-- 지원 직무: {{position}}
-- 채용공고: {{job_posting}}
+- 지원 직무: {position}
+- 채용공고: {job_posting}
 
 [출력 형식 JSON]
 {{
@@ -31,16 +30,15 @@ JOB_ANALYSIS_PROMPT = f"""
 }}
 """
 
-PROFILE_ANALYSIS_PROMPT = f"""
-당신은 취업 지원자의 프로필을 분석하는 전문 커리어 코치 에이전트입니다.
+PROFILE_ANALYSIS_PROMPT = """당신은 취업 지원자의 프로필을 분석하는 전문 커리어 코치 에이전트입니다.
 자기소개서 초안, 개인 프로젝트 설명, 보유 기술스택을 바탕으로 사용자의 현재 경험 역량을 요약하십시오.
 
-{COMMON_RULES}
+""" + COMMON_RULES + """
 
 [입력 데이터]
-- 자기소개서 초안: {{resume_draft}}
-- 개인 프로젝트 설명: {{project_description}}
-- 보유 기술스택: {{tech_stack}}
+- 자기소개서 초안: {resume_draft}
+- 개인 프로젝트 설명: {project_description}
+- 보유 기술스택: {tech_stack}
 
 [출력 형식 JSON]
 {{
@@ -52,15 +50,14 @@ PROFILE_ANALYSIS_PROMPT = f"""
 }}
 """
 
-FIT_GAP_PROMPT = f"""
-당신은 직무 적합성을 분석하는 매칭 에이전트입니다.
+FIT_GAP_PROMPT = """당신은 직무 적합성을 분석하는 매칭 에이전트입니다.
 채용공고의 핵심 요구사항과 사용자의 보유 경험을 대조하여 Fit-Gap 분석을 수행하십시오.
 
-{COMMON_RULES}
+""" + COMMON_RULES + """
 
 [입력 데이터]
-- 채용공고 분석 결과: {{job_analysis}}
-- 사용자 프로필 분석 결과: {{profile_analysis}}
+- 채용공고 분석 결과: {job_analysis}
+- 사용자 프로필 분석 결과: {profile_analysis}
 
 [출력 형식 JSON]
 {{
@@ -96,25 +93,24 @@ FIT_GAP_PROMPT = f"""
 }}
 """
 
-ROADMAP_PROMPT = f"""
-당신은 학습 및 프로젝트 로드맵을 설계하는 커리어 컨설턴트 에이전트입니다.
+ROADMAP_PROMPT = """당신은 학습 및 프로젝트 로드맵을 설계하는 커리어 컨설턴트 에이전트입니다.
 사용자의 부족한 역량(Gap)을 보완하고, 희망 준비 기간과 가용 시간 내에 수행 가능한 맞춤형 프로젝트 로드맵을 생성하십시오.
 이때 참고한 RAG 문서 내용을 적극적으로 활용하여 구체적이고 현실성 있게 구성해야 합니다.
 
-{COMMON_RULES}
+""" + COMMON_RULES + """
 
 [입력 데이터]
-- 희망 기간: {{desired_duration}}주
-- 주당 투입 가능 시간: {{weekly_hours}}시간
-- 목표: {{goal}}
-- Fit-Gap 분석 결과: {{fit_gap_analysis}}
-- 참고한 RAG 문서: {{rag_docs}}
+- 희망 기간: {desired_duration}주
+- 주당 투입 가능 시간: {weekly_hours}시간
+- 목표: {goal}
+- Fit-Gap 분석 결과: {fit_gap_analysis}
+- 참고한 RAG 문서: {rag_docs}
 
 [출력 형식 JSON]
 {{
   "recommended_project_title": "추천 프로젝트 제목",
   "project_summary": "추천 프로젝트 요약",
-  "duration_weeks": {{desired_duration}},
+  "duration_weeks": {desired_duration},
   "difficulty": "상/중/하",
   "reason_for_recommendation": "이 프로젝트를 추천한 타당한 이유",
   "weekly_plan": [
@@ -139,16 +135,15 @@ ROADMAP_PROMPT = f"""
 }}
 """
 
-RISK_CHECK_PROMPT = f"""
-당신은 자기소개서 및 이력서 작성 규정과 윤리를 감사하는 리스크 체크 에이전트입니다.
+RISK_CHECK_PROMPT = """당신은 자기소개서 및 이력서 작성 규정과 윤리를 감사하는 리스크 체크 에이전트입니다.
 사용자의 입력 내용과 생성된 로드맵 프로젝트를 대조하여, 개인정보 노출 위험 및 미실행 계획의 오인 위험을 검증하십시오.
 주의: 채용공고 내의 기업명은 개인정보 노출로 판단하지 마십시오.
 
-{COMMON_RULES}
+""" + COMMON_RULES + """
 
 [입력 데이터]
-- 사용자 입력: {{user_input}}
-- 생성된 로드맵: {{roadmap}}
+- 사용자 입력: {user_input}
+- 생성된 로드맵: {roadmap}
 
 [출력 형식 JSON]
 {{

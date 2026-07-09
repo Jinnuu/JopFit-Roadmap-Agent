@@ -4,10 +4,11 @@ import { AnalyzeRequest } from '../types/jopfit';
 interface InputPanelProps {
   onSubmit: (request: AnalyzeRequest) => void;
   isLoading: boolean;
-  onUseMockChange: (useMock: boolean) => void;
 }
 
-export const InputPanel: React.FC<InputPanelProps> = ({ onSubmit, isLoading, onUseMockChange }) => {
+const enableLlmMode = import.meta.env.VITE_ENABLE_LLM_MODE === 'true';
+
+export const InputPanel: React.FC<InputPanelProps> = ({ onSubmit, isLoading }) => {
   // Setup demo default states
   const [position, setPosition] = useState('AI 서비스 백엔드 인턴');
   const [jobPosting, setJobPosting] = useState(
@@ -26,15 +27,10 @@ export const InputPanel: React.FC<InputPanelProps> = ({ onSubmit, isLoading, onU
   const [desiredDuration, setDesiredDuration] = useState<number>(6);
   const [weeklyHours, setWeeklyHours] = useState<number>(15);
   const [goal, setGoal] = useState('포트폴리오 제작');
-  
-  const [useMock, setUseMock] = useState(true);
-  const [apiKey, setApiKey] = useState('');
 
-  const handleToggleMock = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.checked;
-    setUseMock(val);
-    onUseMockChange(val);
-  };
+  // Developer specific states
+  const [useRealLlm, setUseRealLlm] = useState<boolean>(false);
+  const [apiKey, setApiKey] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,8 +49,8 @@ export const InputPanel: React.FC<InputPanelProps> = ({ onSubmit, isLoading, onU
       desired_duration: desiredDuration,
       weekly_hours: weeklyHours,
       goal,
-      use_mock: useMock,
-      api_key: useMock ? undefined : apiKey,
+      use_mock: enableLlmMode ? !useRealLlm : true,
+      api_key: (enableLlmMode && useRealLlm) ? apiKey : '',
     });
   };
 
@@ -208,38 +204,43 @@ export const InputPanel: React.FC<InputPanelProps> = ({ onSubmit, isLoading, onU
               </select>
             </div>
           </div>
+        </div>
 
-          <div className="toggle-group">
-            <input
-              type="checkbox"
-              id="use_mock"
-              checked={useMock}
-              onChange={handleToggleMock}
-              disabled={isLoading}
-            />
-            <label htmlFor="use_mock" className="toggle-label">
-              샘플 결과로 먼저 보기
-            </label>
-          </div>
-
-          {!useMock && (
-            <div className="form-group api-key-container" style={{ marginTop: '16px' }}>
-              <label htmlFor="api_key">OpenAI API Key</label>
-              <span className="form-hint">
-                서버의 .env에 API Key가 기재되어 있는 경우 공란으로 비워두셔도 됩니다.
-              </span>
+        {/* 개발자 설정 섹션 */}
+        {enableLlmMode && (
+          <div className="form-section dev-settings-section" style={{ marginTop: '24px', borderTop: '1px solid var(--border)', paddingTop: '24px' }}>
+            <h3 className="form-section-title" style={{ color: 'var(--danger-text)' }}>개발자 설정</h3>
+            <p className="form-section-desc" style={{ color: 'var(--text-muted)' }}>이 옵션은 로컬 개발 테스트용입니다. API Key는 저장하지 않고 요청 시에만 사용합니다.</p>
+            
+            <div className="toggle-group" style={{ marginBottom: '16px' }}>
               <input
-                id="api_key"
-                type="password"
-                className="form-input"
-                placeholder="sk-..."
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
+                type="checkbox"
+                id="use_real_llm"
+                checked={useRealLlm}
+                onChange={(e) => setUseRealLlm(e.target.checked)}
                 disabled={isLoading}
               />
+              <label htmlFor="use_real_llm" className="toggle-label">
+                실제 LLM 분석 사용
+              </label>
             </div>
-          )}
-        </div>
+
+            {useRealLlm && (
+              <div className="form-group" style={{ marginTop: '12px' }}>
+                <label htmlFor="dev_api_key">OpenAI API Key</label>
+                <input
+                  id="dev_api_key"
+                  type="password"
+                  className="form-input"
+                  placeholder="sk-..."
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  disabled={isLoading}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         <button type="submit" className="submit-btn" disabled={isLoading}>
           {isLoading ? '정리하는 중...' : '빈틈 찾기'}

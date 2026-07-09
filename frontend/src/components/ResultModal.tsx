@@ -41,21 +41,21 @@ export const ResultModal: React.FC<ResultModalProps> = ({ result, open, onClose 
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
-        <header className="modal-header">
+    <div className="modal-overlay result-modal-overlay" onClick={onClose}>
+      <div className="modal-panel result-modal-panel print-report-area" onClick={(e) => e.stopPropagation()}>
+        <header className="modal-header no-print">
           <div className="modal-title-section">
             <span className="modal-title">분석 결과</span>
             <span className="modal-subtitle">
               공고와 현재 경험을 기준으로 정리한 강점, 보완점, 준비 계획입니다.
             </span>
           </div>
-          <button className="modal-close-btn" onClick={onClose}>
+          <button className="modal-close-btn no-print" onClick={onClose}>
             닫기
           </button>
         </header>
         
-        <div className="modal-body">
+        <div className="modal-body no-print">
           <ResultDashboard result={result} isLoading={false} error={null} />
         </div>
       </div>

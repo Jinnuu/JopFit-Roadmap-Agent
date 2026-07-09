@@ -5,6 +5,7 @@ import { RoadmapTimeline } from './RoadmapTimeline';
 import { RiskPanel } from './RiskPanel';
 import { RagReferences } from './RagReferences';
 import { JsonDownloadButton } from './JsonDownloadButton';
+import { PdfSaveButton } from './PdfSaveButton';
 
 interface ResultDashboardProps {
   result: JopFitResult | null;
@@ -259,8 +260,16 @@ export const ResultDashboard: React.FC<ResultDashboardProps> = ({
         </div>
       )}
 
-      {/* Download action button */}
-      <JsonDownloadButton result={result} />
+      {/* Action Buttons side-by-side */}
+      <div className="download-section no-print" style={{ flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <PdfSaveButton result={result} />
+          <JsonDownloadButton result={result} />
+        </div>
+        <span className="submit-disclaimer no-print" style={{ marginTop: '4px', fontSize: '12px', color: 'var(--text-muted)' }}>
+          PDF 저장 시 인쇄 설정에서 “머리글과 바닥글” 옵션을 끄면 더 깔끔하게 저장됩니다.
+        </span>
+      </div>
     </div>
   );
 };

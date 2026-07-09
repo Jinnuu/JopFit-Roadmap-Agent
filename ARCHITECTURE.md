@@ -73,3 +73,27 @@ JopFit Roadmap Agent는 개발 편의성과 확장성을 위해 동일한 `State
 1. **의존성 배제 및 빌드 경량화**: Vector DB 인프라 가동을 위한 추가 라이브러리 및 로컬 DB 캐싱 설정을 제거하여 설치 용량과 모듈 간 충돌 가능성을 원천 차단한다.
 2. **비용 효율성**: 로컬 데이터셋에 대해 임베딩 벡터 생성을 위해 외부 LLM API 호출 요금을 부담하지 않아 테스트 효율을 높인다.
 3. **가독성 및 편집 편의성**: RAG 대상 자료가 Markdown 포맷으로 작성되어 있어 일반 관리자나 개발자가 간편하게 문서를 갱신하거나 구조를 조정할 수 있다.
+
+## 6. 향후 데이터베이스 확장 설계 (Future Conceptual ERD)
+
+본 MVP 버전에서는 데이터베이스 영속성 관리를 제외(Out-of-Scope)하였으나, 향후 사용자별 분석 기록 관리 및 세션 유지를 위해 다음과 같은 엔티티 관계를 기반으로 데이터베이스 확장을 설계할 수 있습니다.
+
+```mermaid
+erDiagram
+    USERS {
+        int id PK
+        string email
+        string password_hash
+        datetime created_at
+    }
+    ANALYSIS_HISTORIES {
+        int id PK
+        int user_id FK
+        string position
+        string tech_stack
+        json analysis_result
+        datetime created_at
+    }
+
+    USERS ||--o{ ANALYSIS_HISTORIES : owns
+```

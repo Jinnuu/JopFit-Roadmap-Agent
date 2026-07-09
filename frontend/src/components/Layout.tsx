@@ -10,7 +10,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, useMock }) => {
     <div className="app-container">
       <header className="topbar">
         <div className="brand">
-          <strong>JopFit</strong>
+          <strong>JobFit</strong>
           <span>Career gap planner</span>
         </div>
         <span className="mode-pill">

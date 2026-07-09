@@ -11,15 +11,18 @@ from src.graph import run_mock_workflow, run_llm_workflow
 from backend.api_models import AnalyzeRequest
 
 app = FastAPI(
-    title="JopFit Roadmap Agent API",
-    description="FastAPI Backend for JopFit Roadmap Agent MVP",
+    title="JobFit Roadmap Agent API",
+    description="FastAPI Backend for JobFit Roadmap Agent MVP",
     version="1.0.0"
 )
 
 # CORS Policy configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow requests from frontend dev servers
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,11 +32,20 @@ app.add_middleware(
 def health_check():
     return {
         "status": "ok",
-        "service": "jopfit-roadmap-agent"
+        "service": "jobfit-roadmap-agent"
     }
 
 @app.post("/api/analyze", response_model=JopFitResult)
 def analyze_endpoint(req: AnalyzeRequest):
+    # Print incoming request logs for debugging
+    print("[JobFit API] analyze request received", {
+        "use_mock": req.use_mock,
+        "position": req.position,
+        "desired_duration": req.desired_duration,
+        "weekly_hours": req.weekly_hours,
+        "has_api_key": bool(req.api_key)
+    })
+
     # Convert API model to Pydantic user input schema
     user_input = UserInput(
         position=req.position,
@@ -45,7 +57,7 @@ def analyze_endpoint(req: AnalyzeRequest):
         desired_duration=req.desired_duration,
         weekly_hours=req.weekly_hours,
         goal=req.goal
-    )
+      )
     
     # Store the original API key to restore it later
     original_env_key = os.environ.get("OPENAI_API_KEY")

@@ -5,12 +5,14 @@ import { ResultModal } from './components/ResultModal';
 import { AnalyzeRequest, JopFitResult } from './types/jopfit';
 import { analyzeJopfit } from './api/jopfitClient';
 
+const enableLlmMode = import.meta.env.VITE_ENABLE_LLM_MODE === 'true';
+
 function App() {
   const [result, setResult] = useState<JopFitResult | null>(null);
   const [isResultOpen, setIsResultOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [useMock, setUseMock] = useState<boolean>(true);
+  const [activeMock, setActiveMock] = useState<boolean>(true);
 
   const handleAnalyzeSubmit = async (requestData: AnalyzeRequest) => {
     setIsLoading(true);
@@ -18,8 +20,20 @@ function App() {
     setResult(null);
     setIsResultOpen(false);
 
+    // If developer LLM mode is enabled, respect user's developer choices. Otherwise, lock to mock mode.
+    const requestPayload: AnalyzeRequest = enableLlmMode
+      ? requestData
+      : {
+          ...requestData,
+          use_mock: true,
+          api_key: '',
+        };
+
+    // Update Layout's status pill in real-time
+    setActiveMock(!!requestPayload.use_mock);
+
     try {
-      const apiResult = await analyzeJopfit(requestData);
+      const apiResult = await analyzeJopfit(requestPayload);
       setResult(apiResult);
       setIsResultOpen(true);
     } catch (err: any) {
@@ -30,11 +44,10 @@ function App() {
   };
 
   return (
-    <Layout useMock={useMock}>
+    <Layout useMock={activeMock}>
       <InputPanel 
         onSubmit={handleAnalyzeSubmit} 
         isLoading={isLoading} 
-        onUseMockChange={setUseMock} 
       />
       
       {error && (

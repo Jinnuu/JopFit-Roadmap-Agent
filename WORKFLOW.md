@@ -118,5 +118,23 @@ graph TD
 ### 2.9 format_final_result
 * **형태**: 공통 노드
 * **수행 내용**: 파이프라인에서 수집/생성된 정보들을 취합하고, 프로그램 로직으로 `evidence_coverage_rate`를 공식에 대입하여 최종 JopFitResult 타입의 아웃풋 구조체를 구성한다.
-* **읽는 값 (Read)**: 이전 노드들에서 생성되어 상태에 보관 중인 모든 중간 데이터
-* **쓰는 값 (Write)**: `final_result`
+  * **읽는 값 (Read)**: 이전 노드들에서 생성되어 상태에 보관 중인 모든 중간 데이터
+  * **쓰는 값 (Write)**: `final_result`
+
+---
+
+## 3. 비동기 백그라운드 작업 및 알림 확장 설계 (Asynchronous Background Job & Notification)
+
+대규모 상용 서비스 환경에서는 LLM 호출 및 다단계 LangGraph 아키텍처의 수행 시간이 수초에서 수십 초까지 소요될 수 있으므로, 동기식 HTTP 요청 차단(Blocking)을 방지하기 위해 다음과 같이 비동기 백그라운드 작업(Background Job)으로 처리 및 분리할 수 있습니다.
+
+### 3.1 처리 프로세스 (Asynchronous Process Flow)
+
+1. **분석 요청 접수 (Client -> Server)**:
+   * 사용자가 '빈틈 찾기'를 요청하면, 백엔드는 즉시 작업 식별자(`task_id`)를 발급하고 HTTP 202 Accepted 응답을 반환합니다.
+2. **백그라운드 작업 큐 등록 (Celery / Redis / FastAPI BackgroundTasks)**:
+   * 실제 LangGraph 실행 루프는 비동기 백그라운드 워커(Worker)에 의해 비동기로 가동됩니다.
+3. **상태 모니터링 (Polling / WebSocket)**:
+   * 프론트엔드는 `task_id`를 기반으로 작업 진행 상태를 주기적으로 조회(Polling)하거나 WebSocket 채널을 통해 실시간으로 갱신 정보를 수신합니다.
+4. **결과 알림 발송 (Notification Job)**:
+   * 로드맵 분석 및 리스크 감사 절차가 최종 완수(`format_final_result` 통과)되면 알림 트리거가 백그라운드 워커에 의해 실행됩니다.
+   * 등록된 이메일 또는 알림톡을 통해 **"JobFit 분석 리포트가 완료되었습니다."** 링크가 포함된 완성 메일을 발송합니다.
