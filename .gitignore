@@ -4,6 +4,11 @@ __pycache__/
 *.pyo
 *.pyd
 *.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
 # Virtual environments
 .venv/
@@ -12,28 +17,39 @@ env/
 
 # Environment variables
 .env
+.env.*
 !.env.example
 
 # Streamlit
 .streamlit/secrets.toml
 
-# IDE / Editor
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Local generated context
+project_context.txt
+project_context*.txt
+project_context_docs*.txt
+project_context_src*.txt
+project_context_root*.txt
+붙여넣은 텍스트*.txt
+merge_file_output.txt
+project_dump.md
+
+# Accidental folders
+%USERPROFILE%/
+agy-record-backup/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+desktop.ini
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS files
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Test / cache
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
 
 # Build / packaging
 build/
@@ -43,26 +59,3 @@ dist/
 # Local outputs
 outputs/*
 !outputs/.gitkeep
-
-# Project context / generated backup files
-project_context.txt
-project_context*.txt
-붙여넣은 텍스트*.txt
-merge_file_output.txt
-
-# Accidental backup folders
-%USERPROFILE%/
-agy-record-backup/
-
-project_dump.md
-
-frontend/dist/
-frontend/node_modules/
-
-# USERPROFILE
-project_context.txt
-project_context*.txt
-
-# env
-.env
-!.env.example
