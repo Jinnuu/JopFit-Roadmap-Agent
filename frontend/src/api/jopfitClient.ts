@@ -1,6 +1,6 @@
 import { AnalyzeRequest, JopFitResult } from '../types/jopfit';
 
-const DEFAULT_API_BASE_URL = 'http://localhost:8000';
+const DEFAULT_API_BASE_URL = '';
 
 export async function analyzeJopfit(request: AnalyzeRequest): Promise<JopFitResult> {
   const baseUrl = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL;
